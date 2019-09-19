@@ -2,7 +2,7 @@
 
 Experienting with a multi-tab multi-client multi server-node distribution of events between Blazor circuit.
 Check out the project Blazor Server-side. Steps to configure the web application:
-1. Provision an Azure SignalR Service
+1. Provision an Azure SignalR Service - switch it to "classic" mode (in order to support a connected server for BlazorHub as well as serverless client connections for the connected instances ComponentHub)
 2. Configure the connection string for the Blazor hub as well as the connected instances "hub".
 
 # learnings
