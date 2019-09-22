@@ -328,3 +328,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/BlazorApp1/Blazor Server-Side/appsettings.local.json

@@ -32,6 +32,12 @@ namespace BlazorApp1
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    // copy the file appsettings.local.example.json and fill in your connectionstrings
+                    config.AddJsonFile(
+                    "appsettings.local.json", optional: false, reloadOnChange: true);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
