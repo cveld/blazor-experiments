@@ -13,15 +13,21 @@
   </ItemGroup>
 
   <ItemGroup>    
-    <PackageReference Include="Blazor-State" Version="1.0.0-3.0.100-preview9-014004-100" />    
+    <PackageReference Include="Blazor-State" Version="1.0.0" />    
     <PackageReference Include="Microsoft.Azure.SignalR.Management" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0-preview8.19405.7" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.1.0-preview1-10442" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Queue\ServiceBusManager.cs" />
     <None Include="Queue\StorageQueueManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Vacation\" />
   </ItemGroup>
 
 </Project>

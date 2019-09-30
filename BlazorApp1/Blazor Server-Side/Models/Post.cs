@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 
 namespace BlazorServerSide.Models
 {
-    public class Vacation
+    public class Post
     {
-        public int ID { get; set; }
+        public int PostId { get; set; }
         public string Title { get; set; }
-        public int Rating { get; set; }
-        public ICollection<User> Likes { get; set; }
+        public string Content { get; set; }
+
+        public int BlogId { get; set; }
+        public Blog Blog { get; set; }
     }
 }

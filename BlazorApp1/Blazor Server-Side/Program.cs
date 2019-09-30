@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using BlazorServerSide.ConnectedAppServiceInstances;
+using BlazorServerSide.Data;
 
 namespace BlazorApp1
 {
@@ -19,6 +20,8 @@ namespace BlazorApp1
         {
 			// https://andrewlock.net/running-async-tasks-on-app-startup-in-asp-net-core-part-1/
             IHost webHost = CreateHostBuilder(args).Build();
+
+            CreateDbIfNotExists(webHost);
 
             // Create a new scope
             using (var scope = webHost.Services.CreateScope())
@@ -36,11 +39,30 @@ namespace BlazorApp1
                 {
                     // copy the file appsettings.local.example.json and fill in your connectionstrings
                     config.AddJsonFile(
-                    "appsettings.local.json", optional: false, reloadOnChange: true);
+                    "appsettings.local.json", optional: true, reloadOnChange: true);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+        
+        private static void CreateDbIfNotExists(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    var context = services.GetRequiredService<VacationContext>();
+                    VacationsDbInitializer.Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred creating the DB.");
+                }
+            }
+        }
     }
 }

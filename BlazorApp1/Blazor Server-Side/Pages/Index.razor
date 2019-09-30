@@ -1,69 +1,20 @@
 ﻿@page "/"
-@using BlazorServerSide.Queue
-@using BlazorState
-@using BlazorServerSide.Features.Counter
-@inject IQueueManager queueManager
-@inject CounterService counterService
-@inherits BlazorStateComponent
-@using MediatR;
-@implements IDisposable
+@namespace BlazorApp1.Pages
+@inject VacationContext context
+@using BlazorServerSide.Data
+@using BlazorServerSide.Models
 
-<h1>Hello, world!</h1>
+<h3>Index</h3>
 
-Welcome to your new app.
-
-<h3>Reactive count</h3>
-@currentCount
-
-<hr />
-
-<ParentComponent />
-
-<EditForm Model="@Message">
-    <InputText @bind-Value="Message" placeholder="Enter your message"></InputText>
-
-</EditForm>
-
-<h3>Counter: @counterService.Value</h3>
-
-<button @onclick="clicked">Click</button>
+@foreach (var vacation in vacations)
+{
+    @vacation.Title
+}
 
 @code {
-    [Inject] CounterState CounterState { get; set; } // => GetState<CounterState>();
-    int currentCount => CounterState.Count;
-
-    public string Message = "";
-
-    // https://remibou.github.io/Implementing-observer-pattern-in-Blazor/
-    protected override void OnInitialized()
+    List<Vacation> vacations;
+    protected override async Task OnInitializedAsync()
     {
-        counterService.OnDataUpdated += Handle;
-        base.OnInitialized();
-    }
-
-    protected void Handle(object sender, int args)
-    {
-        InvokeAsync(StateHasChanged);
-    }
-
-    async Task clicked()
-    {
-        await queueManager.AddMessageAsync(Message);
-        await queueManager.SendActionAsync(new IncrementCountAction { Amount = 5 });
-        // await Mediator.Send(new IncrementCountAction { Amount = 5 });
-
-
-        //var obj = new IncrementCountAction { Amount = 5 };
-        //var genericmethod = typeof(IMediator).GetMethod("Send").MakeGenericMethod(obj.GetType().GetInterfaces()[0].GetGenericArguments());
-        //var result = genericmethod.Invoke(Mediator, new object[] { obj, null });
-        //Task t = (Task)result;        
-        //await t;
-
-    }
-
-    public new void Dispose()
-    {
-        counterService.OnDataUpdated -= Handle;
-        base.Dispose();
+        vacations = context.Vacations.ToList();
     }
 }

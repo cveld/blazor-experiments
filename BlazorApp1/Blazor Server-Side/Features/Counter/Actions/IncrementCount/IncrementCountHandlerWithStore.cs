@@ -1,4 +1,6 @@
-﻿using BlazorState;
+﻿using BlazorServerSide.Features.Base;
+using BlazorState;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +13,18 @@ namespace BlazorServerSide.Features.Counter
     public partial class CounterState : State<CounterState>
     {
         // Scoped dependency
-        public class IncrementCountHandlerWithStore : RequestHandler<IncrementCountAction, CounterState>
+        internal class IncrementCountHandlerWithStore : BaseHandler<IncrementCountAction>
         {
             public IncrementCountHandlerWithStore(IStore aStore) : base(aStore) { }
 
-            // Scoped property
-            CounterState CounterState => Store.GetState<CounterState>();
-
-            public override Task<CounterState> Handle(IncrementCountAction aIncrementCountAction, CancellationToken aCancellationToken)
+            public override Task<Unit> Handle
+            (
+              IncrementCountAction aIncrementCounterAction,
+              CancellationToken aCancellationToken
+            )
             {
-                CounterState.Count += aIncrementCountAction.Amount;
-                return Task.FromResult(CounterState);
+                CounterState.Count += aIncrementCounterAction.Amount;
+                return Unit.Task;
             }
         }
     }
