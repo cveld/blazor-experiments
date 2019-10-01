@@ -3,18 +3,46 @@
 @inject VacationContext context
 @using BlazorServerSide.Data
 @using BlazorServerSide.Models
+@using BlazorServerSide.Features.Vacation
 
 <h3>Index</h3>
 
-@foreach (var vacation in vacations)
-{
-    @vacation.Title
-}
+<div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 950px;">
+    @foreach (var vacation in vacations)
+    {
+        var exists = vacation.Likes?.Where(u => u.Name == CurrentUser).Any() ?? false;
+        <VacationItem Vacation="@vacation" Liked="@exists" OnFavoriteClicked="@(() => OnFavoriteClicked(vacation))" />
+    }
+</div>
 
 @code {
     List<Vacation> vacations;
+    [CascadingParameter]
+    string CurrentUser { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         vacations = context.Vacations.ToList();
+        CurrentUser = "dummy";
+    }
+
+    void OnFavoriteClicked(Vacation vacation)
+    {
+        var user = vacation.Likes?.Where(u => u.Name == CurrentUser).FirstOrDefault();
+        if (user != null)
+        {
+            vacation.Likes.Remove(user);
+        }
+        else
+        {
+            if (vacation.Likes == null)
+            {
+                vacation.Likes = new HashSet<User>();
+            }
+            vacation.Likes.Add(new User
+            {
+                Name = CurrentUser
+            });
+        }
     }
 }

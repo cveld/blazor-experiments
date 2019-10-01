@@ -37,11 +37,12 @@ namespace BlazorApp1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR().AddAzureSignalR();
-            services.AddRazorPages();            
+            
             services.AddServerSideBlazor().AddHubOptions(options =>
             {
                 options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
             }).AddCircuitOptions(options => { options.DetailedErrors = true; });
+            services.AddRazorPages();
             services.AddSingleton<WeatherForecastService>();
             //services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<SignalRClient>();
