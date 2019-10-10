@@ -1,0 +1,91 @@
+﻿@page "/manyitemstest"
+@using System.Diagnostics
+@using System.Text;
+
+<style>
+    td {
+        width: 5px;
+        height: 5px;
+    }
+</style>
+<h3>ManyItemsTest</h3>
+
+Last run ticks: @lastRunTicks<br />
+Cell clicked count: @CellClickedCount<br />
+@Message<br />
+
+<button @onclick="ButtonClicked">Click</button>
+
+<table>
+    @for (var h = 0; h < height; h++) {
+        var currentHeightIndex = h;
+        <tr>        
+        @for (var w = 0; w < width; w++)
+        {
+            var currentWidthIndex = w;
+            <td @onclick="@((Action<EventArgs>) ((e) => CellClicked(currentHeightIndex, currentWidthIndex)))" style="@BackgroundColor(CellsCount[currentHeightIndex, currentWidthIndex] % 4)"></td>
+        }
+        </tr>
+    }
+</table>
+
+@for (var i = 0; i < 10; i++)
+{
+    var buttonNumber = i;
+    <button @onclick="@(() => Button2Clicked(buttonNumber.ToString()))">@i</button>
+}
+
+
+
+
+@foreach (var Item in Items)
+{
+    @Item
+    <br />
+}
+
+@code {
+    string Message = "";
+    string[] backgroundcolor = new string[] { "#000", "#404", "#088", "#CC0", "#FFF" };
+    const int width = 40;
+    const int height = 40;
+    int[,] CellsCount = new int[height, width];
+    long lastRunTicks = 0;
+    int CellClickedCount = 0;
+    List<string> Items = new List<string>();
+
+    void ButtonClicked()
+    {
+        for (var i = 0; i < 10; i++)
+        {
+            Add();
+        }
+    }
+
+    string BackgroundColor(int index)
+    {
+        return $"background-color: {backgroundcolor[index]}";
+    }
+
+    void Add()
+    {
+        var timer = Stopwatch.StartNew();
+        var sb = new StringBuilder();
+
+        timer.Stop();
+        sb.Append($"elapsed: {timer.ElapsedTicks} ticks");
+        Items.Add(sb.ToString());
+        lastRunTicks = timer.ElapsedTicks;
+    }
+
+    void CellClicked(int h, int w)
+    {
+        CellsCount[h, w]++;
+        Message = $"h = {h}; w = {w}";
+    }
+
+    void Button2Clicked(string Message)
+    {
+        this.Message = Message;
+    }
+}
