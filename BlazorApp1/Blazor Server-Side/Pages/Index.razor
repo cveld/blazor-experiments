@@ -1,69 +1,80 @@
 ﻿@page "/"
-@using BlazorServerSide.Queue
-@using BlazorState
-@using BlazorServerSide.Features.Counter
-@inject IQueueManager queueManager
-@inject CounterService counterService
-@inherits BlazorStateComponent
-@using MediatR;
-@implements IDisposable
+@inject VacationContext context
+@using BlazorServerSide.Data
+@using BlazorServerSide.Models
+@using BlazorServerSide.Features.Vacation
+@using BlazorServerSide.Components.Vacation
 
-<h1>Hello, world!</h1>
+<h3>Index</h3>
 
-Welcome to your new app.
+<div class="pages">
+    <div class="wrapper-overview">
+        <ol class="overview">
+            @foreach (var vacation in vacations)
+            {
+                var exists = vacation.Likes?.Where(u => u.Name == CurrentUser).Any() ?? false;
+                var classes = new List<string>();
+                if (focusIndex == -1 || focusIndex == vacation.ID)
+                {
+                    classes.Add("is-active");
+                }
+                if (focusIndex == vacation.ID)
+                {
+                    classes.Add("is-special");
+                }
 
-<h3>Reactive count</h3>
-@currentCount
-
-<hr />
-
-<ParentComponent />
-
-<EditForm Model="@Message">
-    <InputText @bind-Value="Message" placeholder="Enter your message"></InputText>
-
-</EditForm>
-
-<h3>Counter: @counterService.Value</h3>
-
-<button @onclick="clicked">Click</button>
+                <li class="@string.Join(" ", classes)" @onmouseenter="() => onAction(vacation.ID)" @onmouseleave="() => onAction(-1)">
+                    @*<VacationItem Vacation="@vacation" Liked="@exists" OnFavoriteClicked="() => OnFavoriteClicked(vacation)" />*@
+                    <Vacation Vacation="@vacation" />
+                </li>
+            }
+        </ol>
+    </div>
+</div>
 
 @code {
-    [Inject] CounterState CounterState { get; set; } // => GetState<CounterState>();
-    int currentCount => CounterState.Count;
+    int focusIndex = -1;
 
-    public string Message = "";
 
-    // https://remibou.github.io/Implementing-observer-pattern-in-Blazor/
-    protected override void OnInitialized()
+    List<VacationModel> vacations;
+    [CascadingParameter]
+    string CurrentUser { get; set; }
+
+    protected override async Task OnParametersSetAsync()
     {
-        counterService.OnDataUpdated += Handle;
-        base.OnInitialized();
     }
 
-    protected void Handle(object sender, int args)
+    protected override void OnAfterRender(bool firstRender)
     {
-        InvokeAsync(StateHasChanged);
     }
 
-    async Task clicked()
+    protected override async Task OnInitializedAsync()
     {
-        await queueManager.AddMessageAsync(Message);
-        await queueManager.SendActionAsync(new IncrementCountAction { Amount = 5 });
-        // await Mediator.Send(new IncrementCountAction { Amount = 5 });
-
-
-        //var obj = new IncrementCountAction { Amount = 5 };
-        //var genericmethod = typeof(IMediator).GetMethod("Send").MakeGenericMethod(obj.GetType().GetInterfaces()[0].GetGenericArguments());
-        //var result = genericmethod.Invoke(Mediator, new object[] { obj, null });
-        //Task t = (Task)result;        
-        //await t;
-
+        vacations = context.Vacations.ToList();
+        CurrentUser = "dummy";
     }
 
-    public new void Dispose()
+    void OnFavoriteClicked(VacationModel vacation)
     {
-        counterService.OnDataUpdated -= Handle;
-        base.Dispose();
+        var user = vacation.Likes?.Where(u => u.Name == CurrentUser).FirstOrDefault();
+        if (user != null)
+        {
+            vacation.Likes.Remove(user);
+        }
+        else
+        {
+            if (vacation.Likes == null)
+            {
+                vacation.Likes = new HashSet<User>();
+            }
+            vacation.Likes.Add(new User
+            {
+                Name = CurrentUser
+            });
+        }
+    }
+
+    void onAction(int index) {
+        this.focusIndex = index;
     }
 }

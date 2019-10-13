@@ -18,6 +18,8 @@ using BlazorState;
 using System.Reflection;
 using BlazorServerSide.Features.Counter;
 using Newtonsoft.Json;
+using BlazorServerSide.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp1
 {
@@ -35,11 +37,12 @@ namespace BlazorApp1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR().AddAzureSignalR();
-            services.AddRazorPages();            
+            
             services.AddServerSideBlazor().AddHubOptions(options =>
             {
                 options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
             }).AddCircuitOptions(options => { options.DetailedErrors = true; });
+            services.AddRazorPages();
             services.AddSingleton<WeatherForecastService>();
             //services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<SignalRClient>();
@@ -55,7 +58,9 @@ namespace BlazorApp1
                     }
             );
             services.AddSingleton<CounterState>();  // BlazorState CounterService
-            
+            services.AddDbContext<VacationContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("VacationDatabase")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

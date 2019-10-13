@@ -8,20 +8,49 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\Stars\EventHandlers.cs" />
     <Compile Remove="Queue\ServiceBusManager.cs" />
     <Compile Remove="Queue\StorageQueueManager.cs" />
   </ItemGroup>
 
-  <ItemGroup>    
-    <PackageReference Include="Blazor-State" Version="1.0.0-3.0.100-preview9-014004-100" />    
-    <PackageReference Include="Microsoft.Azure.SignalR.Management" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0-preview8.19405.7" />
-    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.1.0-preview1-10442" />
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Components\Stars\EventHandlers.cs" />
+  </ItemGroup>
+
+  <ItemGroup>    
+    <PackageReference Include="Blazor-State" Version="1.0.0" />    
+    <PackageReference Include="BuildWebCompiler" Version="1.12.394" />    
+    <PackageReference Include="Microsoft.Azure.SignalR.Management" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.1.0-preview1-10442" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Link="README.md" />
+    <None Include="compilerconfig.json" />
     <None Include="Queue\ServiceBusManager.cs" />
     <None Include="Queue\StorageQueueManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Logs\" />
   </ItemGroup>
 
 </Project>
