@@ -36,8 +36,8 @@
     .overview {
         display: inline-flex;
         flex-wrap: wrap;
-        max-width: 1024px;
-        /*width: 900px;*/
+        max-width: 800px;
+        /*width: 600px;*/
         margin: auto;
     }
 
@@ -75,7 +75,7 @@
     }
 
     @media (min-width: 768px) {
-        app-vacation {
+        .vacation {
             max-width: 400px;
             width: 100%;
         }

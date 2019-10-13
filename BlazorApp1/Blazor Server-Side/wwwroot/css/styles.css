@@ -23,8 +23,8 @@
   .pages .overview {
     display: inline-flex;
     flex-wrap: wrap;
-    max-width: 1024px;
-    /*width: 900px;*/
+    max-width: 800px;
+    /*width: 600px;*/
     margin: auto; }
   .pages .vacation {
     flex: 1; }
@@ -45,7 +45,7 @@
       min-width: 250px;
       width: 100%; } }
   @media (min-width: 768px) {
-    .pages app-vacation {
+    .pages .vacation {
       max-width: 400px;
       width: 100%; } }
 
@@ -55,6 +55,7 @@
   -webkit-overflow-scrolling: touch;
   transform: translateZ(0);
   user-select: none;
+  min-width: 205px;
   /* footer */ }
   .vacation .card {
     box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 9px 0 rgba(0, 0, 0, 0.02);
