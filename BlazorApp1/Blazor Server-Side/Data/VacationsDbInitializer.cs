@@ -18,9 +18,9 @@ namespace BlazorServerSide.Data
                 return;   // DB has been seeded
             }
 
-            var vacations = new Vacation[]
+            var vacations = new VacationModel[]
             {
-                new Vacation
+                new VacationModel
                 {
                     Title = "8 persoons vakantie huis in Humble",
                     ImageUrl = "artiom-vallat-H59WxBNSQY8-unsplash.jpg",
@@ -32,7 +32,7 @@ namespace BlazorServerSide.Data
                     SleepingRooms = 4,
                     Stars = 3
                 },
-                new Vacation
+                new VacationModel
                 {
                     Title = "Modern strandhuis in Bergen aan Zee nabij het centrum", 
                     ImageUrl = "andrew-ruiz-fmz-B9At9iQ-unsplash.jpg",

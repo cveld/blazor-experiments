@@ -1,0 +1,54 @@
+﻿@using BlazorServerSide.Models
+@inject IConfiguration configuration
+@inject NavigationManager NavigationManager
+@using Microsoft.Extensions.Configuration
+@using BlazorServerSide.Components.Stars
+@using BlazorServerSide.Components.Rating
+
+<div class="vacation">
+    <article class="card">
+        <header>
+            <img src="@ImageUrl" class="card-img-top content">
+        </header>
+
+        <section class="card-body">
+
+            <header class="card-title">@vacation.Title</header>
+            <Rating value="@vacation.Rating"></Rating>
+            <Stars amount="vacation.Stars"></Stars>
+        </section>
+
+        <footer class="card-footer">
+            <span class="price-unit">@vacation.PriceUnit</span>
+            <span class="wrapper-price">
+                <span class="price-orig">€ @vacation.OriginalPrice</span>
+                <span class="price">€ @vacation.Price</span>
+            </span>
+        </footer>
+    </article>
+</div>
+
+@code {
+    [Parameter]
+    public VacationModel vacation { get; set; }
+
+    string ImageUrl;
+
+
+    protected override void OnInitialized()
+    {
+        var section = configuration.GetSection("VacationImagesBaseUrl");
+        var relativeuri = section.Value;
+        var absoluteuri = "";
+        if (relativeuri.StartsWith("~"))
+        {
+            absoluteuri = NavigationManager.BaseUri + relativeuri.Substring(2) + vacation.ImageUrl;
+        }
+        else
+        {
+            absoluteuri = relativeuri;
+        }
+        ImageUrl = absoluteuri;
+    }
+
+}

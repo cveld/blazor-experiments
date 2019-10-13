@@ -1,24 +1,52 @@
 ﻿@page "/"
-@namespace BlazorApp1.Pages
 @inject VacationContext context
 @using BlazorServerSide.Data
 @using BlazorServerSide.Models
 @using BlazorServerSide.Features.Vacation
+@using BlazorServerSide.Components.Vacation
 
 <h3>Index</h3>
 
-<div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 950px;">
-    @foreach (var vacation in vacations)
-    {
-        var exists = vacation.Likes?.Where(u => u.Name == CurrentUser).Any() ?? false;
-        <VacationItem Vacation="@vacation" Liked="@exists" OnFavoriteClicked="@(() => OnFavoriteClicked(vacation))" />
-    }
+<div class="pages">
+    <div class="wrapper-overview">
+        <ol class="overview">
+            @foreach (var vacation in vacations)
+            {
+                var exists = vacation.Likes?.Where(u => u.Name == CurrentUser).Any() ?? false;
+                var classes = new List<string>();
+                if (focusIndex == -1 || focusIndex == vacation.ID)
+                {
+                    classes.Add("is-active");
+                }
+                if (focusIndex == vacation.ID)
+                {
+                    classes.Add("is-special");
+                }
+
+                <li class="@string.Join(" ", classes)" @onmouseenter="() => onAction(vacation.ID)" @onmouseleave="() => onAction(-1)">
+                    @*<VacationItem Vacation="@vacation" Liked="@exists" OnFavoriteClicked="() => OnFavoriteClicked(vacation)" />*@
+                    <Vacation Vacation="@vacation" />
+                </li>
+            }
+        </ol>
+    </div>
 </div>
 
 @code {
-    List<Vacation> vacations;
+    int focusIndex = -1;
+
+
+    List<VacationModel> vacations;
     [CascadingParameter]
     string CurrentUser { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -26,7 +54,7 @@
         CurrentUser = "dummy";
     }
 
-    void OnFavoriteClicked(Vacation vacation)
+    void OnFavoriteClicked(VacationModel vacation)
     {
         var user = vacation.Likes?.Where(u => u.Name == CurrentUser).FirstOrDefault();
         if (user != null)
@@ -44,5 +72,9 @@
                 Name = CurrentUser
             });
         }
+    }
+
+    void onAction(int index) {
+        this.focusIndex = index;
     }
 }

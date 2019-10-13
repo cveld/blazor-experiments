@@ -13,21 +13,10 @@
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
-
-    <!-- temporary vacation item styling -->
-    <link rel="preload" href="//cdn2.leisure-nb.net/web/css/a710e79.css?201909241254" as="style" onload="this.onload=null;this.rel='stylesheet'">
-
-    <link rel="preload" href="//cdn2.leisure-nb.net/web/bundles/leisurecore/fonts/geomanist-regular-webfont.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="//cdn2.leisure-nb.net/web/bundles/leisurecore/fonts/geomanist-regular-italic-webfont.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="//cdn2.leisure-nb.net/web/bundles/leisurecore/fonts/geomanist-book-webfont.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="//cdn2.leisure-nb.net/web/bundles/leisurecore/fonts/geomanist-medium-webfont.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="//cdn2.leisure-nb.net/web/bundles/leisurecore/fonts/fapicons.woff" as="font" type="font/woff" crossorigin>
-
-
+    <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
-    <app>
-        @* Remove the following line of code to disable prerendering *@
+    <app>        
         @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
     </app>
 

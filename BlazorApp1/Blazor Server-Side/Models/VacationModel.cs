@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlazorServerSide.Models
 {
-    public class Vacation
+    public class VacationModel
     {
         public int ID { get; set; }
         public string Title { get; set; }
@@ -19,7 +19,7 @@ namespace BlazorServerSide.Models
         public string Location { get; set; }
         public string ImageUrl { get; set; }
         public string PriceUnit { get; set; }
-        public Vacation()
+        public VacationModel()
         {
             //Likes = new HashSet<User>();
         }

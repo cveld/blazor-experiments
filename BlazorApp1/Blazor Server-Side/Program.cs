@@ -27,7 +27,7 @@ namespace BlazorApp1
             using (var scope = webHost.Services.CreateScope())
             {
                 var client = scope.ServiceProvider.GetRequiredService<SignalRClient>();
-                await client.SetupClientAsync();
+                client.SetupClientAsync();
             }
 
             await webHost.StartAsync();

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlazorServerSide.Services
 {
-    public class VakantieCache
+    public class VacationCache
     {
 
     }

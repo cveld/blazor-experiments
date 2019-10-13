@@ -9,7 +9,7 @@ namespace BlazorServerSide.Data
 {
     public class VacationContext : DbContext
     {
-        public DbSet<Vacation> Vacations { get; set; }
+        public DbSet<VacationModel> Vacations { get; set; }
 
         public VacationContext(DbContextOptions<VacationContext> options) : base(options)
         {
