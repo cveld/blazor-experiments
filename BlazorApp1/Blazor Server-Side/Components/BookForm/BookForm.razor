@@ -1,0 +1,36 @@
+﻿@inject IModalService ModalService
+@using BlazorServerSide.Models
+
+@*
+    Applying Chris Sainty's Bootstrap Modal component: https://github.com/Blazored/Modal    
+*@
+
+<h3>You would like to book @vacation.Title</h3>
+
+<MatButton>Test</MatButton>
+<MatDatePicker @bind-Value="@Date1"></MatDatePicker>
+
+<button @onclick="@SubmitForm" class="btn btn-primary">Submit</button>
+<button @onclick="@Cancel" class="btn btn-secondary">Cancel</button>
+
+@code {
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+    VacationModel vacation;
+    public DateTime? Date1 { get; set; } = DateTime.Now.AddDays(-10);
+
+    protected override void OnInitialized()
+    {
+        vacation = Parameters.Get<VacationModel>("vacation");
+    }
+
+    protected void SubmitForm(MouseEventArgs mouseEventArgs)
+    {
+        ModalService.Close(ModalResult.Ok(true));
+    }
+
+    protected void Cancel(MouseEventArgs mouseEventArgs)
+    {
+        ModalService.Cancel();
+    }
+
+}

@@ -4,9 +4,11 @@
 @using Microsoft.Extensions.Configuration
 @using BlazorServerSide.Components.Stars
 @using BlazorServerSide.Components.Rating
+@using BlazorServerSide.Components.BookForm
+@inject IModalService Modal
 
 <div class="vacation">
-    <article class="card">
+    <article class="card" @onclick="showModal">
         <header>
             <img src="@ImageUrl" class="card-img-top content">
         </header>
@@ -51,4 +53,10 @@
         ImageUrl = absoluteuri;
     }
 
+    void showModal()
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("vacation", vacation);
+        Modal.Show<BookForm>("Book vacation", parameters);
+    }
 }

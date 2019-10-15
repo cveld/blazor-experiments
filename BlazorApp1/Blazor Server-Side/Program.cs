@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using BlazorServerSide.ConnectedAppServiceInstances;
 using BlazorServerSide.Data;
 
-namespace BlazorApp1
+namespace BlazorServerSide
 {
     public class Program
     {
