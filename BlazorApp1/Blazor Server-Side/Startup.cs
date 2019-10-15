@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BlazorApp1.Data;
+using BlazorServerSide.Data;
 using BlazorServerSide;
 using BlazorServerSide.Queue;
 using BlazorServerSide.ConnectedAppServiceInstances;
@@ -18,10 +18,11 @@ using BlazorState;
 using System.Reflection;
 using BlazorServerSide.Features.Counter;
 using Newtonsoft.Json;
-using BlazorServerSide.Data;
 using Microsoft.EntityFrameworkCore;
+using Blazored.Modal;
+using EmbeddedBlazorContent;
 
-namespace BlazorApp1
+namespace BlazorServerSide
 {
     public class Startup
     {
@@ -48,7 +49,7 @@ namespace BlazorApp1
             services.AddSingleton<SignalRClient>();
             services.AddSingleton<CounterService>();  // naive counter service
             services.AddSingleton<SignalRServer>();
-            services.AddTransient<Shared>();
+            services.AddTransient<BlazorServerSide.ConnectedAppServiceInstances.Shared>();
             services.AddSingleton<IQueueManager, SignalRQueueManager>();
             services.AddBlazorState(
                 (aOptions) => aOptions.Assemblies =
@@ -60,7 +61,7 @@ namespace BlazorApp1
             services.AddSingleton<CounterState>();  // BlazorState CounterService
             services.AddDbContext<VacationContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("VacationDatabase")));
-
+            services.AddBlazoredModal();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,6 +88,8 @@ namespace BlazorApp1
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+            app.UseEmbeddedBlazorContent(typeof(MatBlazor.BaseMatComponent).Assembly);
         }
     }
 }
