@@ -1,17 +1,18 @@
 ﻿@page "/"
-@inject VacationContext context
 @using BlazorServerSide.Data
 @using BlazorServerSide.Models
 @using BlazorServerSide.Features.Vacation
 @using BlazorServerSide.Components.Vacation
-
+@using BlazorServerSide.CrossCircuitCommunication
+@inherits IndexBase
 <h3>Index</h3>
 
 <div class="pages">
     <div class="wrapper-overview">
         <ol class="overview">
-            @foreach (var vacation in vacations)
+            @foreach (var vacationkeyvaluepair in vacations)
             {
+                var vacation = vacationkeyvaluepair.Value;
                 var exists = vacation.Likes?.Where(u => u.Name == CurrentUser).Any() ?? false;
                 var classes = new List<string>();
                 if (focusIndex == -1 || focusIndex == vacation.ID)
@@ -25,7 +26,7 @@
 
                 <li class="@string.Join(" ", classes)" @onmouseenter="() => onAction(vacation.ID)" @onmouseleave="() => onAction(-1)">
                     @*<VacationItem Vacation="@vacation" Liked="@exists" OnFavoriteClicked="() => OnFavoriteClicked(vacation)" />*@
-                    <Vacation Vacation="@vacation" />
+                    <Vacation Vacation="@vacation" Liked="exists" OnLikeClicked="() => OnFavoriteClicked(vacation)" />
                 </li>
             }
         </ol>
@@ -33,48 +34,10 @@
 </div>
 
 @code {
-    int focusIndex = -1;
+    int focusIndex;
 
-
-    List<VacationModel> vacations;
-    [CascadingParameter]
-    string CurrentUser { get; set; }
-
-    protected override async Task OnParametersSetAsync()
+    void onAction(int index)
     {
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        vacations = context.Vacations.ToList();
-        CurrentUser = "dummy";
-    }
-
-    void OnFavoriteClicked(VacationModel vacation)
-    {
-        var user = vacation.Likes?.Where(u => u.Name == CurrentUser).FirstOrDefault();
-        if (user != null)
-        {
-            vacation.Likes.Remove(user);
-        }
-        else
-        {
-            if (vacation.Likes == null)
-            {
-                vacation.Likes = new HashSet<User>();
-            }
-            vacation.Likes.Add(new User
-            {
-                Name = CurrentUser
-            });
-        }
-    }
-
-    void onAction(int index) {
         this.focusIndex = index;
     }
 }

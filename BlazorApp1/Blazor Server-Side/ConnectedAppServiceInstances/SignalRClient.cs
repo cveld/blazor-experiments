@@ -78,6 +78,7 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
         }
 
         public event EventHandler<MessageReceivedArgs> MessageReceived;
+        public event EventHandler<MessageReceivedArgs> CrossCircuitMessageReceived;
 
         private async Task StartConnection()
         {
@@ -89,8 +90,12 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
 
             hubConnection.On(Shared.stringmethodname, (string message) =>
             {
-                
-                MessageReceived?.Invoke(this, new MessageReceivedArgs { Message = message });                
+                MessageReceived?.Invoke(this, new MessageReceivedArgs { Message = message });
+            });
+
+            hubConnection.On(Shared.crosscircuitmethodname, (string message) =>
+            {
+                MessageReceived?.Invoke(this, new MessageReceivedArgs { Message = message });
             });
 
             hubConnection.On(Shared.requestmethodname, async (string message) =>

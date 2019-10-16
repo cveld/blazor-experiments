@@ -34,7 +34,7 @@ namespace BlazorServerSide.Queue
 
         public async Task SendActionAsync<T>(IRequest<T> request)
         {
-            await server.SendActionAsync(request);
+            await server.SendActionAsync(request, MessageTypeEnum.Request);
         }
     }
 }

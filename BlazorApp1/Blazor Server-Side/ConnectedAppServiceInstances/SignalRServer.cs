@@ -53,6 +53,9 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
         {
             EnsureInitiatized();
             switch (messageTypeEnum) {
+                case MessageTypeEnum.CrossCircuit:
+                    await _hubContext.Clients.All.SendAsync(Shared.crosscircuitmethodname, message);
+                    break;
                 case MessageTypeEnum.String:
                     await _hubContext.Clients.All.SendAsync(Shared.stringmethodname, message);
                     break;
@@ -64,13 +67,22 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
             }
         }
 
-        public async Task SendActionAsync<T>(IRequest<T> request)
+        public async Task SendActionAsync<T>(IRequest<T> request, MessageTypeEnum messageTypeEnum)
         {                        
             using (StringWriter textWriter = new StringWriter())
             {
                 shared.jsonSerializer.Value.Serialize(textWriter, request);
                 var s = textWriter.ToString();
-                await SendMessageAsync(s, MessageTypeEnum.Request);
+                await SendMessageAsync(s, messageTypeEnum);
+            }
+        }
+        public async Task SendObjectAsync(object request, MessageTypeEnum messageTypeEnum)
+        {
+            using (StringWriter textWriter = new StringWriter())
+            {
+                shared.jsonSerializer.Value.Serialize(textWriter, request);
+                var s = textWriter.ToString();
+                await SendMessageAsync(s, messageTypeEnum);
             }
         }
     }

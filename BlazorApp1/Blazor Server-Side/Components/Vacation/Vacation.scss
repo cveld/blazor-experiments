@@ -14,6 +14,10 @@
             @include aspect-ratio(16, 8);
             position: relative;
             overflow: hidden;
+
+            &.mouse-pointer {
+                cursor: pointer
+            }
         }
 
         .content {

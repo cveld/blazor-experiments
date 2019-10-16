@@ -9,6 +9,7 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
     {
         NotSpecified,
         String,
-        Request 
+        Request,
+        CrossCircuit,
     }
 }
