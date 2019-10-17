@@ -330,3 +330,5 @@ ASALocalRun/
 .mfractor/
 /BlazorApp1/Blazor Server-Side/appsettings.local.json
 /BlazorApp1/Blazor Server-Side/vacations.db
+/BlazorApp1/Blazor Server-Side/vacations.db-shm
+/BlazorApp1/Blazor Server-Side/vacations.db-wal

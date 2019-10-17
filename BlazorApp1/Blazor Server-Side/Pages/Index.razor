@@ -1,43 +1,6 @@
 ﻿@page "/"
-@using BlazorServerSide.Data
-@using BlazorServerSide.Models
-@using BlazorServerSide.Features.Vacation
-@using BlazorServerSide.Components.Vacation
-@using BlazorServerSide.CrossCircuitCommunication
-@inherits IndexBase
+@using BlazorServerSide.Components.VacationList
+
 <h3>Index</h3>
 
-<div class="pages">
-    <div class="wrapper-overview">
-        <ol class="overview">
-            @foreach (var vacationkeyvaluepair in vacations)
-            {
-                var vacation = vacationkeyvaluepair.Value;
-                var exists = vacation.Likes?.Where(u => u.Name == CurrentUser).Any() ?? false;
-                var classes = new List<string>();
-                if (focusIndex == -1 || focusIndex == vacation.ID)
-                {
-                    classes.Add("is-active");
-                }
-                if (focusIndex == vacation.ID)
-                {
-                    classes.Add("is-special");
-                }
-
-                <li class="@string.Join(" ", classes)" @onmouseenter="() => onAction(vacation.ID)" @onmouseleave="() => onAction(-1)">
-                    @*<VacationItem Vacation="@vacation" Liked="@exists" OnFavoriteClicked="() => OnFavoriteClicked(vacation)" />*@
-                    <Vacation Vacation="@vacation" Liked="exists" OnLikeClicked="() => OnFavoriteClicked(vacation)" />
-                </li>
-            }
-        </ol>
-    </div>
-</div>
-
-@code {
-    int focusIndex;
-
-    void onAction(int index)
-    {
-        this.focusIndex = index;
-    }
-}
+<VacationList />

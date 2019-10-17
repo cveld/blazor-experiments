@@ -3,23 +3,18 @@ using BlazorServerSide.Models;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorServerSide.Pages
+namespace BlazorServerSide.Components.VacationList
 {
-    public class IndexBase : ComponentBase
+    public class VacationListBase : ComponentBase, IDisposable
     {
         const string FAVORITECLICKEDEVENTID = "FavoriteClicked";
-
-        int focusIndex = -1;
-        //public IndexBase(CrossCircuitCommunication.CrossCircuitCommunication crossCircuitCommunication, VacationContext context)
-        //{
-        //    this.crossCircuitCommunication = crossCircuitCommunication;
-        //    this.context = context;
-        //}
-
+       
         protected Dictionary<int, VacationModel> vacations;
+
         [Inject]
         public CrossCircuitCommunication.CrossCircuitCommunication crossCircuitCommunication { get; set; }
 
@@ -37,20 +32,23 @@ namespace BlazorServerSide.Pages
         {
         }
 
+        List<(HashSet<Action<CrossCircuitCommunication.MessagePayload>>, Action<CrossCircuitCommunication.MessagePayload>)> subscriptions = new List<(HashSet<Action<CrossCircuitCommunication.MessagePayload>>, Action<CrossCircuitCommunication.MessagePayload>)>();
+
         protected override async Task OnInitializedAsync()
         {
             vacations = new Dictionary<int, VacationModel>();
             foreach (var vacation in context.Vacations)
             {
-                vacations.Add(vacation.ID, vacation);
-                crossCircuitCommunication.GetCallbacksHashSet(FAVORITECLICKEDEVENTID, vacation.ID).Add((payload) => OnFavoriteClickedMessageHandler((FavoriteClickedModel)payload.Message, EnforceStateHasChanged: true));
-    
-        }
-            context.Vacations.ToList();
+                vacations.Add(vacation.ID, vacation);         
+                Action<CrossCircuitCommunication.MessagePayload> action = (payload) => OnFavoriteClickedMessageHandler((FavoriteClickedModel)payload.Message, RemoteTrigger: true);
+                var hashset = crossCircuitCommunication.GetCallbacksHashSet(FAVORITECLICKEDEVENTID, vacation.ID);
+                hashset.Add(action);
+                subscriptions.Add((hashset, action));
+            }            
             CurrentUser = "dummy";
         }
 
-        bool VacationLiked(VacationModel vacation)
+        protected bool VacationLiked(VacationModel vacation)
         {
             var user = vacation.Likes?.Where(u => u.Name == CurrentUser).FirstOrDefault();
             return user != null;
@@ -63,11 +61,12 @@ namespace BlazorServerSide.Pages
                 VacationId = vacationModel.ID,
                 Liked = !VacationLiked(vacationModel)
             };
+            
             OnFavoriteClickedMessageHandler(message, false);
             await crossCircuitCommunication.Dispatch(FAVORITECLICKEDEVENTID, vacationModel.ID, message);
         }
 
-        void OnFavoriteClickedMessageHandler(FavoriteClickedModel favoriteClickedModel, bool EnforceStateHasChanged)
+        void OnFavoriteClickedMessageHandler(FavoriteClickedModel favoriteClickedModel, bool RemoteTrigger)
         {
             var vacation = vacations[favoriteClickedModel.VacationId];
             var currentstate = VacationLiked(vacation);
@@ -92,12 +91,26 @@ namespace BlazorServerSide.Pages
                     });
                 }
             }
-            if (EnforceStateHasChanged)
+            if (RemoteTrigger)
             {
                 // Message is coming from external source; Blazor state needs to get a kick 
                 base.InvokeAsync(StateHasChanged);
             }
+            else
+            {
+                // Method is directly called due to the user's action, persist the change:
+                context.SaveChanges();
+            }
         }
 
+        public void Dispose()
+        {
+            foreach (var item in subscriptions)
+            {
+                // Item1 = HashSet
+                // Item2 = anonymous Action 
+                item.Item1.Remove(item.Item2);
+            }
+        }
     }
 }
