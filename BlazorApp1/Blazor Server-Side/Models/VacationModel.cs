@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlazorServerSide.Models
 {
+    [Table("Vacation")]
     public class VacationModel
     {
         public int ID { get; set; }
@@ -13,7 +15,7 @@ namespace BlazorServerSide.Models
         public string Price { get; set; }
         public string Rating { get; set; }
         public int Stars { get; set; }
-        public ICollection<User> Likes { get; set; }
+        virtual public ICollection<User> Likes { get; set; }
         public int Persons { get; set; }
         public int SleepingRooms { get; set; }
         public string Location { get; set; }

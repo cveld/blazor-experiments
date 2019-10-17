@@ -59,9 +59,13 @@ namespace BlazorServerSide
                     }
             );
             services.AddSingleton<CounterState>();  // BlazorState CounterService
-            services.AddDbContext<VacationContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("VacationDatabase")));
+            services.AddDbContext<VacationContext>(options => {
+                    options.UseSqlite(Configuration.GetConnectionString("VacationDatabase"));
+                    options.UseLazyLoadingProxies();
+                    }
+                );
             services.AddBlazoredModal();
+            services.AddSingleton<CrossCircuitCommunication.CrossCircuitCommunication, CrossCircuitCommunication.CrossCircuitCommunication>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

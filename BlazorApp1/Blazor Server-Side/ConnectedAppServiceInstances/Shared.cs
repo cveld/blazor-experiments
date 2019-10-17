@@ -11,6 +11,7 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
     {
         public const string hubname = "connectedinstances";
         public const string stringmethodname = "connectedinstancemessage_string";
+        public const string crosscircuitmethodname = "connectedinstancemessage_crosscircuit";
         public const string requestmethodname = "connectedinstancemessage_request";
         private readonly IConfiguration configuration;
         public string connectionstring;

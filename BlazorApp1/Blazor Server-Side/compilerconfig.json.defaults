@@ -22,7 +22,7 @@
       "relativeUrls": true,
       "sourceMapRoot": "",
       "lineFeed": "",
-      "sourceMap": false
+      "sourceMap": true
     },
     "stylus": {
       "sourceMap": false

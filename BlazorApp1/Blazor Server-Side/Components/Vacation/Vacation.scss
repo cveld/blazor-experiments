@@ -16,6 +16,10 @@
             overflow: hidden;
         }
 
+        header.mouse-pointer {
+            cursor: pointer;            
+        }
+
         .content {
             padding-top: 0
         }
@@ -70,5 +74,6 @@
             color: #565f73;
             font-weight: 600;
         }
-    } /* footer */
+    }
+    /* footer */
 } /* vacation */

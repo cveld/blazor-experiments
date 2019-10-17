@@ -17,6 +17,8 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
 {
     /// <summary>
     /// Singleton class that's responsible for receiving messages from the connected app service instances
+    /// This class currently contains three iterations of the same:
+    /// 1) 
     /// </summary>
     public class SignalRClient
     {
@@ -77,7 +79,7 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
             await StartConnection();
         }
 
-        public event EventHandler<MessageReceivedArgs> MessageReceived;
+        public event EventHandler<MessageReceivedArgs> MessageReceived;        
 
         private async Task StartConnection()
         {
@@ -89,8 +91,12 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
 
             hubConnection.On(Shared.stringmethodname, (string message) =>
             {
-                
-                MessageReceived?.Invoke(this, new MessageReceivedArgs { Message = message });                
+                MessageReceived?.Invoke(this, new MessageReceivedArgs { Message = message });
+            });
+
+            hubConnection.On(Shared.crosscircuitmethodname, (string message) =>
+            {
+                MessageReceived?.Invoke(this, new MessageReceivedArgs { Message = message });
             });
 
             hubConnection.On(Shared.requestmethodname, async (string message) =>

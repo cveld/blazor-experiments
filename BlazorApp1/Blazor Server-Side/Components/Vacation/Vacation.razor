@@ -5,17 +5,18 @@
 @using BlazorServerSide.Components.Stars
 @using BlazorServerSide.Components.Rating
 @using BlazorServerSide.Components.BookForm
+@using BlazorServerSide.Components.Like
 @inject IModalService Modal
 
 <div class="vacation">
-    <article class="card" @onclick="showModal">
+    <article class="card">
         <header>
             <img src="@ImageUrl" class="card-img-top content">
+            <Like Liked="Liked" OnLikeClicked="OnLikeClicked"></Like>
         </header>
 
         <section class="card-body">
-
-            <header class="card-title">@vacation.Title</header>
+            <header class="card-title mouse-pointer" @onclick="showModal">@vacation.Title</header>
             <Rating value="@vacation.Rating"></Rating>
             <Stars amount="vacation.Stars"></Stars>
         </section>
@@ -23,7 +24,10 @@
         <footer class="card-footer">
             <span class="price-unit">@vacation.PriceUnit</span>
             <span class="wrapper-price">
-                <span class="price-orig">€ @vacation.OriginalPrice</span>
+                @if (!string.IsNullOrEmpty(vacation.OriginalPrice))
+                {
+                    <span class="price-orig">€ @vacation.OriginalPrice</span>
+                }
                 <span class="price">€ @vacation.Price</span>
             </span>
         </footer>
@@ -34,8 +38,11 @@
     [Parameter]
     public VacationModel vacation { get; set; }
 
-    string ImageUrl;
+    [Parameter] public EventCallback OnLikeClicked { get; set; }
 
+    [Parameter] public bool Liked { get; set; }
+
+    string ImageUrl;
 
     protected override void OnInitialized()
     {
