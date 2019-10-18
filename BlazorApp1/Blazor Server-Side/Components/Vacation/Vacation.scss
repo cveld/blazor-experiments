@@ -20,6 +20,10 @@
             cursor: pointer;            
         }
 
+        header.booked {
+            cursor: default;
+        }
+
         .content {
             padding-top: 0
         }

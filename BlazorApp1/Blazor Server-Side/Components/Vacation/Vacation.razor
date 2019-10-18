@@ -16,7 +16,7 @@
         </header>
 
         <section class="card-body">
-            <header class="card-title mouse-pointer" @onclick="showModal">@vacation.Title</header>
+            <header class="card-title mouse-pointer @(vacation.Booked ? "booked" : null)" @onclick="showModal">@vacation.Title @if (vacation.Booked){<b>booked</b>}</header>
             <Rating value="@vacation.Rating"></Rating>
             <Stars amount="vacation.Stars"></Stars>
         </section>
@@ -39,6 +39,7 @@
     public VacationModel vacation { get; set; }
 
     [Parameter] public EventCallback OnLikeClicked { get; set; }
+    [Parameter] public EventCallback OnBooked { get; set; }
 
     [Parameter] public bool Liked { get; set; }
 
@@ -64,6 +65,22 @@
     {
         var parameters = new ModalParameters();
         parameters.Add("vacation", vacation);
+        Modal.OnClose += ModalClosed;
         Modal.Show<BookForm>("Book vacation", parameters);
+    }
+
+    async void ModalClosed(ModalResult modalResult)
+    {
+        if (modalResult.Cancelled)
+        {
+        }
+        else
+        {
+            
+            
+            await OnBooked.InvokeAsync(modalResult.Data);
+        }
+
+        Modal.OnClose -= ModalClosed;
     }
 }

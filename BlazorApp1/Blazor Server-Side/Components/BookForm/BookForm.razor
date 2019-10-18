@@ -2,35 +2,73 @@
 @using BlazorServerSide.Models
 
 @*
-    Applying Chris Sainty's Bootstrap Modal component: https://github.com/Blazored/Modal    
+    Applying the following third party Blazor component libraries:
+    * Chris Sainty's Bootstrap Modal component: https://github.com/Blazored/Modal
+    * Vladimir Samoilenko's Material Design Blazor library: https://github.com/SamProf/MatBlazor
 *@
 
 <h3>You would like to book @vacation.Title</h3>
 
-<MatButton>Test</MatButton>
-<MatDatePicker @bind-Value="@Date1"></MatDatePicker>
 
-<button @onclick="@SubmitForm" class="btn btn-primary">Submit</button>
-<button @onclick="@Cancel" class="btn btn-secondary">Cancel</button>
+<EditForm Model="bookVacationFormModel" OnValidSubmit="SubmitForm">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <MatDatePicker Label="Booking date" @bind-Value="bookVacationFormModel.BookingDate"></MatDatePicker>
+        <ValidationMessage For="() => bookVacationFormModel.BookingDate" />
+    </div>
+    <div class="form-group">
+        <MatTextField Label="E-mail address" @bind-Value="bookVacationFormModel.EmailAddress"></MatTextField>
+        <ValidationMessage For="() => bookVacationFormModel.EmailAddress" />
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            <MatSelect Label="Phone prefix" Enhanced="true" @bind-Value="bookVacationFormModel.PhoneNumberPrefix">
+                @foreach (var prefix in PhoneNumberPrefixModel.PhoneNumberPrefixList())
+                {
+                    <MatOption Value="@prefix.ID">@prefix.Display</MatOption>
+                }
+            </MatSelect>
+        </div>
+        <div class="col-md-8">
+            <MatTextField Label="Phone number" @bind-Value="bookVacationFormModel.PhoneNumber"></MatTextField>
+        </div>
+    </div>
+    <div class="form-group">
+        <ValidationMessage For="() => bookVacationFormModel.PhoneNumberPrefix" />
+        <ValidationMessage For="() => bookVacationFormModel.PhoneNumber" />
+    </div>
+    CARL5
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button @onclick="@Cancel" class="btn btn-secondary">Cancel</button>
+</EditForm>
 
 @code {
+    BookVacationFormModel bookVacationFormModel = new BookVacationFormModel
+    {
+        PhoneNumberPrefix = PhoneNumberPrefixModel.PREFIXNETHERLANDS
+    };
+
     [CascadingParameter] ModalParameters Parameters { get; set; }
     VacationModel vacation;
-    public DateTime? Date1 { get; set; } = DateTime.Now.AddDays(-10);
 
     protected override void OnInitialized()
     {
+        // Get VacationModel object from modal parameters:
         vacation = Parameters.Get<VacationModel>("vacation");
     }
 
-    protected void SubmitForm(MouseEventArgs mouseEventArgs)
+    protected void SubmitForm()
     {
-        ModalService.Close(ModalResult.Ok(true));
+        var bookedEventModel = new BookedEventModel
+        {
+            VacationID = vacation.ID,
+            BookVacationFormModel = bookVacationFormModel
+        };
+        ModalService.Close(ModalResult.Ok(bookedEventModel));
     }
 
     protected void Cancel(MouseEventArgs mouseEventArgs)
     {
         ModalService.Cancel();
     }
-
 }
