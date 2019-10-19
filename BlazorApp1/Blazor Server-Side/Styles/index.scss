@@ -4,3 +4,7 @@
 @import "Components/Rating/Rating.scss";
 @import "Components/Stars/Stars.scss";
 @import "Components/Like/Like.scss";
+
+.mdc-menu-surface {
+    z-index: 200;
+}

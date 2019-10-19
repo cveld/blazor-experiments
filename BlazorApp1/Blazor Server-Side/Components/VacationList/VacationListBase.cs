@@ -12,7 +12,8 @@ namespace BlazorServerSide.Components.VacationList
     public class VacationListBase : ComponentBase, IDisposable
     {
         const string FAVORITECLICKEDEVENTID = "FavoriteClicked";
-       
+        const string BOOKEDEVENTID = "Booked";
+
         protected Dictionary<int, VacationModel> vacations;
 
         [Inject]
@@ -23,28 +24,28 @@ namespace BlazorServerSide.Components.VacationList
 
         [CascadingParameter]
         protected string CurrentUser { get; set; }
-
-        protected override async Task OnParametersSetAsync()
-        {
-        }
-
-        protected override void OnAfterRender(bool firstRender)
-        {
-        }
-
+      
         List<(HashSet<Action<CrossCircuitCommunication.MessagePayload>>, Action<CrossCircuitCommunication.MessagePayload>)> subscriptions = new List<(HashSet<Action<CrossCircuitCommunication.MessagePayload>>, Action<CrossCircuitCommunication.MessagePayload>)>();
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             vacations = new Dictionary<int, VacationModel>();
             foreach (var vacation in context.Vacations)
             {
                 vacations.Add(vacation.ID, vacation);         
-                Action<CrossCircuitCommunication.MessagePayload> action = (payload) => OnFavoriteClickedMessageHandler((FavoriteClickedModel)payload.Message, RemoteTrigger: true);
+
+                // Register FavoriteClicked event handler
+                Action<CrossCircuitCommunication.MessagePayload> action = (payload) => FavoriteClickedEventHandler((FavoriteClickedEventModel)payload.Message, RemoteTrigger: true);
                 var hashset = crossCircuitCommunication.GetCallbacksHashSet(FAVORITECLICKEDEVENTID, vacation.ID);
                 hashset.Add(action);
                 subscriptions.Add((hashset, action));
-            }            
+
+                // Register Booked event handler
+                action = (payload) => BookedEventHandler((BookedEventModel)payload.Message, RemoteTrigger: true);
+                hashset = crossCircuitCommunication.GetCallbacksHashSet(BOOKEDEVENTID, vacation.ID);
+                hashset.Add(action);
+                subscriptions.Add((hashset, action));
+            }
             CurrentUser = "dummy";
         }
 
@@ -56,24 +57,25 @@ namespace BlazorServerSide.Components.VacationList
 
         async protected void OnFavoriteClicked(VacationModel vacationModel)
         {
-            var message = new FavoriteClickedModel
+            var message = new FavoriteClickedEventModel
             {
                 VacationId = vacationModel.ID,
-                Liked = !VacationLiked(vacationModel)
+                Liked = !VacationLiked(vacationModel),
+                User = CurrentUser
             };
             
-            OnFavoriteClickedMessageHandler(message, false);
+            FavoriteClickedEventHandler(message, false);
             await crossCircuitCommunication.Dispatch(FAVORITECLICKEDEVENTID, vacationModel.ID, message);
         }
 
-        void OnFavoriteClickedMessageHandler(FavoriteClickedModel favoriteClickedModel, bool RemoteTrigger)
+        void FavoriteClickedEventHandler(FavoriteClickedEventModel favoriteClickedModel, bool RemoteTrigger)
         {
             var vacation = vacations[favoriteClickedModel.VacationId];
             var currentstate = VacationLiked(vacation);
             var desiredstate = favoriteClickedModel.Liked;
             if (currentstate != desiredstate)
             {
-                var user = vacation.Likes?.Where(u => u.Name == CurrentUser).FirstOrDefault();
+                var user = vacation.Likes?.Where(u => u.Name == favoriteClickedModel.User).FirstOrDefault();
 
                 if (!desiredstate)
                 {
@@ -90,17 +92,53 @@ namespace BlazorServerSide.Components.VacationList
                         Name = CurrentUser
                     });
                 }
+
+                if (RemoteTrigger)
+                {
+                    // Message is coming from external source; Blazor state needs to get a kick 
+                    base.InvokeAsync(StateHasChanged);
+                }
+                else
+                {
+                    // Method is directly called due to the user's action, persist the change:
+                    context.SaveChanges();
+                }
             }
-            if (RemoteTrigger)
+        }
+
+        public async Task OnBookedAsync(object obj)
+        {
+            BookedEventModel bookedEvent = obj as BookedEventModel;
+            BookedEventHandler(bookedEvent, false);
+            await crossCircuitCommunication.Dispatch(BOOKEDEVENTID, bookedEvent.VacationID, bookedEvent);
+        }
+
+        public void BookedEventHandler(BookedEventModel bookedEvent, bool RemoteTrigger)
+        {
+            var vacation = vacations[bookedEvent.VacationID];
+            var currentstate = VacationBooked(vacation);
+            var desiredstate = true;
+
+            if (currentstate != desiredstate)
             {
-                // Message is coming from external source; Blazor state needs to get a kick 
-                base.InvokeAsync(StateHasChanged);
+                vacation.Booked = desiredstate;
+                if (RemoteTrigger)
+                {
+                    // Message is coming from external source; Blazor state needs to get a kick 
+                    base.InvokeAsync(StateHasChanged);
+                }
+                else
+                {
+                    // Method is directly called due to the user's action, persist the change:
+                    // commented out as there is currently no undo booking UI
+                    // context.SaveChanges();
+                }
             }
-            else
-            {
-                // Method is directly called due to the user's action, persist the change:
-                context.SaveChanges();
-            }
+        }
+
+        private bool VacationBooked(VacationModel vacation)
+        {
+            return vacation.Booked;
         }
 
         public void Dispose()

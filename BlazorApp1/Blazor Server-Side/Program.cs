@@ -27,7 +27,8 @@ namespace BlazorServerSide
             using (var scope = webHost.Services.CreateScope())
             {
                 var client = scope.ServiceProvider.GetRequiredService<SignalRClient>();
-                client.SetupClientAsync();
+                // explicitly don't await this callback so that the webhost can kick off in parallel
+                _ = client.SetupClientAsync();
             }
 
             await webHost.StartAsync();

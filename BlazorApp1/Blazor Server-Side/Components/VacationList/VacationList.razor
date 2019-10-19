@@ -24,7 +24,7 @@
 
                 <li class="@string.Join(" ", classes)" @onmouseenter="() => onAction(vacation.ID)" @onmouseleave="() => onAction(-1)">
                     @*<VacationItem Vacation="@vacation" Liked="@liked" OnFavoriteClicked="() => OnFavoriteClicked(vacation)" />*@
-                    <Vacation Vacation="@vacation" Liked="liked" OnLikeClicked="() => OnFavoriteClicked(vacation)" />
+                    <Vacation Vacation="@vacation" Liked="liked" OnLikeClicked="() => OnFavoriteClicked(vacation)" OnBooked="(item) => OnBookedAsync(item)" />
                 </li>
             }
         </ol>
