@@ -12,13 +12,16 @@ using MediatR;
 using System.IO;
 using Newtonsoft.Json;
 using BlazorState;
+using BlazorServerSide.Features.Counter;
 
 namespace BlazorServerSide.ConnectedAppServiceInstances
 {
     /// <summary>
     /// Singleton class that's responsible for receiving messages from the connected app service instances
     /// This class currently contains three iterations of the same:
-    /// 1) 
+    /// 1) Single property broadcasting
+    /// 2) BlazorState action broardcasting
+    /// 3) Arbitrary entity broadcasting
     /// </summary>
     public class SignalRClient
     {
@@ -89,16 +92,21 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
             //    MessagesList.Add(newMessage);
             //});
 
+            // Single property broadcasting:
             hubConnection.On(Shared.stringmethodname, (string message) =>
             {
                 MessageReceived?.Invoke(this, new MessageReceivedArgs { Message = message });
             });
 
+            // Arbitrary entity broadcasting (applied in Vacation Planner demo):
             hubConnection.On(Shared.crosscircuitmethodname, (string message) =>
             {
                 MessageReceived?.Invoke(this, new MessageReceivedArgs { Message = message });
             });
 
+            // BlazorState action broadcasting -
+            // This scenario does not function properly as the transiently scoped BlazorState subscriptions within the component
+            // are not available from within the backplane scope below. The result being that the component's view is not updated
             hubConnection.On(Shared.requestmethodname, async (string message) =>
             {
                 using (var scope = serviceProvider.CreateScope())
@@ -109,15 +117,22 @@ namespace BlazorServerSide.ConnectedAppServiceInstances
                     using (var reader = new JsonTextReader(new StringReader(message)))
                     {
 
-                        object obj = shared.jsonSerializer.Value.Deserialize(reader);
-                        // object obj = JsonConvert.DeserializeObject(message);
-                        // Type t = obj.GetType().GetInterfaces()[0].GenericTypeArguments[0];
-                        // obj.GetType().GetInterfaces()[0].GetGenericArguments();
-                        // IRequest request = (IRequest)obj;
-                        var genericmethod = typeof(IMediator).GetMethod("Send").MakeGenericMethod(obj.GetType().GetInterfaces()[0].GetGenericArguments());
+                        object obj = shared.jsonSerializer.Value.Deserialize(reader);                        
+                        
+                        // The following commented out lines are converted below to processing a generic T:
+                        // IncrementCountAction action = obj as IncrementCountAction;
+                        // await mediator.Send(action);
+
+                        var sendmethod = typeof(IMediator).GetMethod("Send");
+                        
+                        // Find the interface IRequest<T>:
+                        var IRequestInterface = obj.GetType().GetInterfaces().First(i => i.Name == "IRequest`1");
+
+                        // Create Send<T> based on the same T from IRequestInterface:
+                        var genericmethod = sendmethod.MakeGenericMethod(IRequestInterface.GetGenericArguments()); 
+                        
                         var result = genericmethod.Invoke(mediator, new object[] { obj, null });
-                        Task t = (Task)result;
-                        // await mediator.Send(obj);
+                        Task t = (Task)result;                        
                         await t;
                     }
                 }

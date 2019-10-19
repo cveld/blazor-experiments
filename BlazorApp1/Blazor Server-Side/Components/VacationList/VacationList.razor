@@ -1,6 +1,5 @@
 ﻿@using BlazorServerSide.Data
 @using BlazorServerSide.Models
-@using BlazorServerSide.Features.Vacation
 @using BlazorServerSide.Components.Vacation
 @using BlazorServerSide.CrossCircuitCommunication
 @inherits VacationListBase
@@ -22,8 +21,7 @@
                     classes.Add("is-special");
                 }
 
-                <li class="@string.Join(" ", classes)" @onmouseenter="() => onAction(vacation.ID)" @onmouseleave="() => onAction(-1)">
-                    @*<VacationItem Vacation="@vacation" Liked="@liked" OnFavoriteClicked="() => OnFavoriteClicked(vacation)" />*@
+                <li class="@string.Join(" ", classes)" @onmouseenter="() => onAction(vacation.ID)" @onmouseleave="() => onAction(-1)">                    
                     <Vacation Vacation="@vacation" Liked="liked" OnLikeClicked="() => OnFavoriteClicked(vacation)" OnBooked="(item) => OnBookedAsync(item)" />
                 </li>
             }

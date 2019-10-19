@@ -6,11 +6,13 @@
 @code {
 
     [Parameter] public string ParentsTitle { get; set; }
+    // By convention the bind-infrastructure reacts upon a PropertyChanged EventCallback so that the parent's state is updated
+    // The child-component is declared in the parent as follows: <ChildComponent @bind-ParentsTitle="Title" />
     [Parameter] public EventCallback<string> ParentsTitleChanged { get; set; }
 
     private async Task UpdateParentsTitle()
     {
-        var ParentsTitle2 = "Hello, From Child Component!";
-        await ParentsTitleChanged.InvokeAsync(ParentsTitle2);
+        var NewTitle = "Hello, From Child Component!";        
+        await ParentsTitleChanged.InvokeAsync(NewTitle);
     }
 }

@@ -8,28 +8,53 @@
 @using MediatR;
 @implements IDisposable
 
-<h1>Hello, world!</h1>
+<h1>Cross-circuit state management</h1>
+Blazor does not implement a cross-circuit (cross connected clients) state management pattern out of the box. In order to facilitate cross-circuit communication we experimented with three variations; all using a SignalR backplane (next to the Blazor Server SignalR connection client-side):
+<ol>
+    <li>Single property in a singleton service</li>
+    <li>Arbitrary lists of entities; managed through a single subscription system. This is implemented in the <a href="/">vacation list demo</a></li>
+    <li>Single property through BlazorState. Unfortunately cross circuit communication is not yet supported by this library.</li>
+</ol>
 
-Welcome to your new app.
+<h2>Single property in a singleton service</h2>
+<p>Counter: @counterService.Value</p>
 
-<h3>Reactive count</h3>
-@currentCount
+<button @onclick="Clicked">Click</button>
+<hr />
+<h2>Single property through BlazorState</h2>
+
+<p>BlazorState is a wonderful library that implements the redux pattern within Blazor. See <a href="https://github.com/TimeWarpEngineering/blazor-state/">BlazorState on GitHub</a></p>
+
+<p>Counter through BlazorState: @BlazorStateCount</p>
+<p>
+    <button @onclick="BlazorStateSingleCircuitClicked">Click single circuit</button>
+    <button @onclick="BlazorStateCrossCircuitClicked">Click cross circuit</button>
+</p>
+<p>Cross circuit limitation:</p>
+<p>
+    In its current state BlazorState does only support single circuit state management and therefore does not work properly.
+    The component's view is simply not updated as the component's BlazorState transiently scoped subscriptions are not available from the backplane scope.
+</p>
 
 <hr />
 
+<h1>Communication from parent component to child component and vice versa</h1>
+
 <ParentComponent />
 
+<hr />
+
+<h1>Binding a property to an input control</h1>
 <EditForm Model="@Message">
     <InputText @bind-Value="Message" placeholder="Enter your message"></InputText>
 </EditForm>
+The message you have entered: @Message
+<br />
 
-<h3>Counter: @counterService.Value</h3>
-
-<button @onclick="clicked">Click</button>
 
 @code {
     [Inject] CounterState CounterState { get; set; } // => GetState<CounterState>();
-    int currentCount => CounterState.Count;
+    int BlazorStateCount => CounterState.Count;
 
     public string Message = "";
 
@@ -45,19 +70,21 @@ Welcome to your new app.
         InvokeAsync(StateHasChanged);
     }
 
-    async Task clicked()
+    async Task Clicked()
     {
         await queueManager.AddMessageAsync(Message);
+    }
+
+    async Task BlazorStateSingleCircuitClicked()
+    {
+        await Mediator.Send(new IncrementCountAction { Amount = 5 });
+    }
+
+    async Task BlazorStateCrossCircuitClicked()
+    {
+        // This setup is not supported by BlazorState in its current state
+        // The BlazorState subscriptions only live in the actual component reference and aren't shared towards the backplane scope
         await queueManager.SendActionAsync(new IncrementCountAction { Amount = 5 });
-        // await Mediator.Send(new IncrementCountAction { Amount = 5 });
-
-
-        //var obj = new IncrementCountAction { Amount = 5 };
-        //var genericmethod = typeof(IMediator).GetMethod("Send").MakeGenericMethod(obj.GetType().GetInterfaces()[0].GetGenericArguments());
-        //var result = genericmethod.Invoke(Mediator, new object[] { obj, null });
-        //Task t = (Task)result;        
-        //await t;
-
     }
 
     public new void Dispose()
