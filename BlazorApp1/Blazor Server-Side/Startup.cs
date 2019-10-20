@@ -19,7 +19,7 @@ using System.Reflection;
 using BlazorServerSide.Features.Counter;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
-using Blazored.Modal;
+using BlazoredMaterialDesignModal;
 using EmbeddedBlazorContent;
 
 namespace BlazorServerSide

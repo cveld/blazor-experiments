@@ -28,7 +28,7 @@ namespace BlazorServerSide.Components.VacationList
         List<(HashSet<Action<CrossCircuitCommunication.MessagePayload>>, Action<CrossCircuitCommunication.MessagePayload>)> subscriptions = new List<(HashSet<Action<CrossCircuitCommunication.MessagePayload>>, Action<CrossCircuitCommunication.MessagePayload>)>();
 
         protected override void OnInitialized()
-        {
+        {            
             vacations = new Dictionary<int, VacationModel>();
             foreach (var vacation in context.Vacations)
             {

@@ -21,7 +21,7 @@
         <ValidationMessage For="() => bookVacationFormModel.EmailAddress" />
     </div>
     <div class="form-row">
-        <div class="col-md-4">
+        <div class="form-col-md-4">
             <MatSelect Label="Phone prefix" Enhanced="true" @bind-Value="bookVacationFormModel.PhoneNumberPrefix">
                 @foreach (var prefix in PhoneNumberPrefixModel.PhoneNumberPrefixList())
                 {
@@ -29,7 +29,7 @@
                 }
             </MatSelect>
         </div>
-        <div class="col-md-8">            
+        <div class="form-col-md-8">            
             <MatTextField Label="Phone number" @bind-Value="bookVacationFormModel.PhoneNumber"></MatTextField>
         </div>
     </div>

@@ -17,9 +17,17 @@ namespace BlazorServerSide.Models
         protected override ValidationResult IsValid(object objValue,
                                                        ValidationContext validationContext)
         {
-            var dateValue = objValue as DateTime? ?? new DateTime();            
+            var dateValue = objValue as DateTime? ?? new DateTime();   
+            
+            // Due to a 'feature' of the Date Picker; DateTime objects are submitted with local time offset whereas the Kind attribute is set to UTC
+            // E.g. in the Netherlands when a user submits 30 October 2019; it will be send to this method as 2019-10-29 22:00
+            // We need to compensate:
+            if (dateValue.ToUniversalTime().TimeOfDay.Hours >= 12)
+            {
+                dateValue = dateValue.AddDays(1);
+            }
 
-            if (dateValue.ToLocalTime().Date < DateTime.UtcNow.Date)
+            if (dateValue.ToUniversalTime().Date < DateTime.UtcNow.Date)
             {
                 return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), new string[] { validationContext.MemberName });
             }
