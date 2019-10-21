@@ -1,0 +1,29 @@
+@using System.Globalization
+@inject Microsoft.JSInterop.IJSRuntime JS
+@typeparam TPin
+@*credits go to Steve Sanderson's MissionControl demo during NDC Oslo 2019: https://github.com/SteveSandersonMS/presentation-2019-06-NDCOslo*@
+
+<div class="pin-map" @ref="mapElem">
+    @foreach (var item in Data)
+    {
+    <map-pin @key="item" data-longitude="@PinLongitude(item).ToString(CultureInfo.InvariantCulture)" data-latitude="@PinLatitude(item).ToString(CultureInfo.InvariantCulture)">
+        @PinTemplate(item)
+    </map-pin>
+    }
+</div>
+
+@code {
+    ElementReference mapElem;
+
+    [Parameter] public IEnumerable<TPin> Data { get; set; }
+    [Parameter] public Func<TPin, double> PinLongitude { get; set; }
+    [Parameter] public Func<TPin, double> PinLatitude { get; set; }
+    [Parameter] public RenderFragment<TPin> PinTemplate { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+        => await JS.InvokeAsync<object>(
+            "PinMap.createOrUpdate",
+            new object[] { mapElem, new[] { -74.00633, 40.71341 } }); // New York
+            // new object[] { mapElem, new[] { 52.091343, 5.117110 } }); // Utrecht
+            // new object[] { mapElem, new[] { 52.379390, 4.900229 } }); // Amsterdam
+}

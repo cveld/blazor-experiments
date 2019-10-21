@@ -21,6 +21,12 @@ using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using BlazoredMaterialDesignModal;
 using EmbeddedBlazorContent;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace BlazorServerSide
 {
@@ -37,12 +43,59 @@ namespace BlazorServerSide
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
+                .AddAzureAD(options => Configuration.Bind("AzureAd", options));
+
+            services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    // Instead of using the default validation (validating against a single issuer value, as we do in
+                    // line of business apps), we inject our own multitenant validation logic
+                    ValidateIssuer = false,
+
+                    // If the app is meant to be accessed by entire organizations, add your issuer validation logic here.
+                    //IssuerValidator = (issuer, securityToken, validationParameters) => {
+                    //    if (myIssuerValidationLogic(issuer)) return issuer;
+                    //}
+                };
+
+                options.Events = new OpenIdConnectEvents
+                {
+                    OnTicketReceived = context =>
+                    {
+                        // If your authentication logic is based on users then add your logic here
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        context.Response.Redirect("/Error");
+                        context.HandleResponse(); // Suppress the exception
+                        return Task.CompletedTask;
+                    },
+                    // If your application needs to authenticate single users, add your user validation below.
+                    //OnTokenValidated = context =>
+                    //{
+                    //    return myUserValidationLogic(context.Ticket.Principal);
+                    //}
+                };
+            });
+
             services.AddSignalR().AddAzureSignalR();
             
             services.AddServerSideBlazor().AddHubOptions(options =>
             {
                 options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
             }).AddCircuitOptions(options => { options.DetailedErrors = true; });
+
+            //services.AddControllersWithViews(options =>
+            //{
+            //    var policy = new AuthorizationPolicyBuilder()
+            //        .RequireAuthenticatedUser()
+            //        .Build();
+            //    options.Filters.Add(new AuthorizeFilter(policy));
+            //});
+
             services.AddRazorPages();
             services.AddSingleton<WeatherForecastService>();
             //services.AddSingleton<IConfigurationRoot>(Configuration);
@@ -85,10 +138,14 @@ namespace BlazorServerSide
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();            
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

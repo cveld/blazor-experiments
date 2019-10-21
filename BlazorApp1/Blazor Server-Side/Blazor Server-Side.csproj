@@ -21,11 +21,13 @@
     <Content Include="Components\Stars\EventHandlers.cs" />
   </ItemGroup>
 
-  <ItemGroup>    
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="3.0.0" />
     <PackageReference Include="Blazor-State" Version="1.0.0" />        
     <PackageReference Include="BuildWebCompiler" Version="1.12.394" />    
     <PackageReference Include="EmbeddedBlazorContent" Version="1.9.0" />    
     <PackageReference Include="MatBlazor" Version="1.9.0" />    
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.0" />    
     <PackageReference Include="Microsoft.Azure.SignalR.Management" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.1.0-preview1-10442" />
@@ -58,6 +60,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazoredMaterialDesignModal\BlazoredMaterialDesignModal.csproj" />
+    <ProjectReference Include="..\PinMapLibrary\PinMapLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
 </Project>

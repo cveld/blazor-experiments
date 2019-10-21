@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazoredMaterialDesignModal", "BlazoredMaterialDesignModal\BlazoredMaterialDesignModal.csproj", "{90BDDA9E-8D83-4F26-90C5-50EF264511A5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PinMapLibrary", "PinMapLibrary\PinMapLibrary.csproj", "{C4F8544B-7456-49EC-ABC5-E8404F48CE39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{90BDDA9E-8D83-4F26-90C5-50EF264511A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90BDDA9E-8D83-4F26-90C5-50EF264511A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90BDDA9E-8D83-4F26-90C5-50EF264511A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F8544B-7456-49EC-ABC5-E8404F48CE39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F8544B-7456-49EC-ABC5-E8404F48CE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F8544B-7456-49EC-ABC5-E8404F48CE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F8544B-7456-49EC-ABC5-E8404F48CE39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{0B610991-E4AE-46AA-8B3C-2523F39833A3} = {77CA7D45-95A2-4FC7-8284-D808424F053D}
 		{2CF8BCCC-0A51-4480-91E6-ABD3BF78FA29} = {77CA7D45-95A2-4FC7-8284-D808424F053D}
 		{90BDDA9E-8D83-4F26-90C5-50EF264511A5} = {5824B000-6471-453F-8625-A36636CEDF6E}
+		{C4F8544B-7456-49EC-ABC5-E8404F48CE39} = {5824B000-6471-453F-8625-A36636CEDF6E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C52C817-6671-4AA0-8A68-9CA39AA5926F}

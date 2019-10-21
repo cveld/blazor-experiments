@@ -1,0 +1,27 @@
+﻿@page "/agents"
+@using PinMapLibrary
+@attribute [Authorize]
+@using BlazorServerSide.Data
+@using BlazorServerSide.Models
+
+
+@if (agents != null)
+{
+    <div class="pin-map-parent">
+        <PinMap Data="@agents" PinLongitude="@(x => x.Longitude)" PinLatitude="@(x => x.Latitude)">
+            <PinTemplate>
+                <h4>@context.Name</h4>
+                <p><strong>Mission:</strong> @context.Mission</p>
+            </PinTemplate>
+        </PinMap>
+    </div>
+}
+
+@code {
+    IEnumerable<AgentModel> agents;
+
+    protected override void OnInitialized()
+    {
+        agents = AgentsData.GetAgents();
+    }
+}
