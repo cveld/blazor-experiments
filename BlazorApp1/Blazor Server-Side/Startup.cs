@@ -81,12 +81,13 @@ namespace BlazorServerSide
                 };
             });
 
-            services.AddSignalR().AddAzureSignalR();
-            
             services.AddServerSideBlazor().AddHubOptions(options =>
             {
                 options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
             }).AddCircuitOptions(options => { options.DetailedErrors = true; });
+
+            // Remove the following line to disable Azure SignalR Service for the browser connectivity:
+            services.AddSignalR().AddAzureSignalR();
 
             //services.AddControllersWithViews(options =>
             //{
