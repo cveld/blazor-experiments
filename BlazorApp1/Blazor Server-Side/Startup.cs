@@ -46,6 +46,8 @@ namespace BlazorServerSide
             services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
                 .AddAzureAD(options => Configuration.Bind("AzureAd", options));
 
+            services.AddApplicationInsightsTelemetry();
+
             services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
