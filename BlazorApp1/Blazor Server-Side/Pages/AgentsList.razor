@@ -1,0 +1,40 @@
+﻿@page "/agents-list"
+@attribute [Authorize]
+@using BlazorServerSide.Data
+@using BlazorServerSide.Models
+
+<h3>Agents</h3>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Mission</th>
+                <th>Coordinates</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var agent in agents)
+            {
+                <tr>
+                    <td><strong>@agent.Name</strong></td>
+                    <td>@agent.Mission</td>
+                    <td>
+                        @agent.Longitude.ToString("N4"),
+                        @agent.Latitude.ToString("N4")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    IEnumerable<AgentModel> agents;
+
+    protected override void OnInitialized()
+    {
+        agents = AgentsData.GetAgents();
+    } 
+}

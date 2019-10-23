@@ -13,15 +13,19 @@
 <EditForm Model="bookVacationFormModel" OnValidSubmit="SubmitForm">
     <DataAnnotationsValidator />
     <div class="form-group">
-        <MatDatePicker Label="Booking date" @bind-Value="bookVacationFormModel.BookingDate"></MatDatePicker>
-        <ValidationMessage For="() => bookVacationFormModel.BookingDate" />
+        <div class="form-col-md-12">
+            <MatDatePicker Class="col-md-6 col-sm-12" Label="Booking date" @bind-Value="bookVacationFormModel.BookingDate"></MatDatePicker>
+            <ValidationMessage For="() => bookVacationFormModel.BookingDate" />
+        </div>
     </div>
     <div class="form-group">
-        <MatTextField Label="E-mail address" @bind-Value="bookVacationFormModel.EmailAddress"></MatTextField>
-        <ValidationMessage For="() => bookVacationFormModel.EmailAddress" />
+        <div class="form-col-md-12">
+            <MatTextField Label="E-mail address" @bind-Value="bookVacationFormModel.EmailAddress"></MatTextField>
+            <ValidationMessage For="() => bookVacationFormModel.EmailAddress" />
+        </div>
     </div>
-    <div class="form-row">
-        <div class="col-md-4">
+    <div class="form-group form-row">
+        <div class="form-col-md-4">
             <MatSelect Label="Phone prefix" Enhanced="true" @bind-Value="bookVacationFormModel.PhoneNumberPrefix">
                 @foreach (var prefix in PhoneNumberPrefixModel.PhoneNumberPrefixList())
                 {
@@ -29,7 +33,7 @@
                 }
             </MatSelect>
         </div>
-        <div class="col-md-8">            
+        <div class="form-col-md-8">
             <MatTextField Label="Phone number" @bind-Value="bookVacationFormModel.PhoneNumber"></MatTextField>
         </div>
     </div>
@@ -37,8 +41,10 @@
         <ValidationMessage For="() => bookVacationFormModel.PhoneNumberPrefix" />
         <ValidationMessage For="() => bookVacationFormModel.PhoneNumber" />
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <button @onclick="@Cancel" class="btn btn-secondary">Cancel</button>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button @onclick="@Cancel" class="btn btn-secondary">Cancel</button>
+    </div>
 </EditForm>
 
 @code {

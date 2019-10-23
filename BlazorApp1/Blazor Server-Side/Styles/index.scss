@@ -6,5 +6,38 @@
 @import "Components/Like/Like.scss";
 
 .mdc-menu-surface {
+    /*Hack for 'bug' in the MatBlazor library for select dropdowns in modals. Without this hack the select dropdown disappears behind the modal */
     z-index: 200;
 }
+
+map-pin {
+    display: none
+}
+
+.pin-map {
+    position: absolute !important;
+    top: 56px;
+    bottom: 0;
+    right: 0;
+}
+
+@media (max-width: 767.98px) {
+    div.content.hide {
+        display: none
+    }
+    .pin-map {
+        left: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .pin-map {
+        left: 250px;
+    }
+}
+
+
+.pin-map-parent {
+    height: 100vh;
+}
+

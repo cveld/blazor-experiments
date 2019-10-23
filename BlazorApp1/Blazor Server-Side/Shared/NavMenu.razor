@@ -7,6 +7,27 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
+        <AuthorizeView>
+            <Authorized>
+                <li class="small-form-factor nav-item px-3" style="color: #d7d7d7">
+                    Hello, @context.User.Identity.Name!
+                </li>
+            </Authorized>
+        </AuthorizeView>
+        <li class="nav-item px-3">
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="nav-link" href="AzureAD/Account/SignOut">
+                        <span class="oi oi-person" aria-hidden="true"></span> Log out
+                    </NavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="nav-link" href="AzureAD/Account/SignIn">
+                        <span class="oi oi-person" aria-hidden="true"></span> Log in
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
@@ -23,6 +44,16 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
+            <NavLink class="nav-link" href="agents">
+                <span class="oi oi-map-marker" aria-hidden="true"></span> Agents
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="agents-list">
+                <span class="oi oi-list" aria-hidden="true"></span> Agents (list)
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
             <NavLink class="nav-link" href="statemanagementtester">
                 <span class="oi oi-beaker" aria-hidden="true"></span> State mgt tester
             </NavLink>
@@ -32,12 +63,14 @@
 </div>
 
 @code {
-    bool collapseNavMenu = true;
+    [Parameter] public EventCallback<bool> CollapseNavMenuChanged { get; set; }
+    [Parameter] public bool CollapseNavMenu { get; set; }  = true;
 
-    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    string NavMenuCssClass => CollapseNavMenu ? "collapse" : null;
 
-    void ToggleNavMenu()
+    async void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        CollapseNavMenu = !CollapseNavMenu;
+        await CollapseNavMenuChanged.InvokeAsync(CollapseNavMenu);
     }
 }

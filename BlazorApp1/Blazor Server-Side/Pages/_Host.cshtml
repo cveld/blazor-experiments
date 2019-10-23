@@ -11,10 +11,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blazor Experiments</title>
     <base href="~/" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="_content/PinMapLibrary/PinMap.js"></script>
+    @*Original css from Chris Sainty's: <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />*@
+    @Html.EmbeddedBlazorContent()
+
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
-    <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
-    @Html.EmbeddedBlazorContent()
     <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
@@ -28,7 +32,7 @@
             configureSignalR: function (builder) {
                 builder.configureLogging(2); // LogLevel.Information
             }
-        });
+        });      
     </script>
 </body>
 </html>

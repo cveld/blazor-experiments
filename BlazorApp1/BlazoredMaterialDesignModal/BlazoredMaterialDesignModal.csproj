@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RazorLangVersion>3.0</RazorLangVersion>
+    <Authors>Chris Sainty</Authors>
+    <Company></Company>
+    <Copyright>Copyright 2018 (c) Chris Sainty. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Blazored/Modal</PackageProjectUrl>
+    <PackageIconUrl>https://avatars1.githubusercontent.com/u/39194025</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Blazored/Modal</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Blazored Blazor Razor Components Modal Dialogue</PackageTags>
+    <Description>A JavaScript free modal library for Blazor and Razor Components applications. Changes by Carl in 't Veld to accomodate responsive / accessible design based on MatBlazor (Google Material Design)</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MatBlazor" Version="1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+</Project>

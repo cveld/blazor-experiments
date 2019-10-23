@@ -1,0 +1,23 @@
+﻿@page "/ResponsiveModalTester"
+@using BlazorServerSide.Components.VacationList
+@using BlazorServerSide.Models
+
+<h3>Responsive Modal Tester</h3>
+
+<MatDialog IsOpen="true">
+    <MatDatePicker></MatDatePicker>
+    <MatTextField @bind-Value="MyText"></MatTextField>
+    <MatSelect Label="Phone prefix" Enhanced="true" @bind-Value="PhoneNumberPrefix" >
+        @foreach (var prefix in PhoneNumberPrefixModel.PhoneNumberPrefixList())
+            {
+                <MatOption Value="@prefix.ID">@prefix.Display</MatOption>
+            }
+    </MatSelect>
+    
+</MatDialog>
+
+
+@code {
+    string MyText;
+    string PhoneNumberPrefix { get; set; } = PhoneNumberPrefixModel.PREFIXNETHERLANDS;
+}
