@@ -13,16 +13,12 @@
 <EditForm Model="bookVacationFormModel" OnValidSubmit="SubmitForm">
     <DataAnnotationsValidator />
     <div class="form-group">
-        <div class="form-col-md-12">
-            <MatDatePicker Class="col-md-6 col-sm-12" Label="Booking date" @bind-Value="bookVacationFormModel.BookingDate"></MatDatePicker>
-            <ValidationMessage For="() => bookVacationFormModel.BookingDate" />
-        </div>
+        <MatDatePicker Class="col-md-6 col-sm-12" Label="Booking date" @bind-Value="bookVacationFormModel.BookingDate"></MatDatePicker>
+        <ValidationMessage For="() => bookVacationFormModel.BookingDate" />
     </div>
     <div class="form-group">
-        <div class="form-col-md-12">
-            <MatTextField Label="E-mail address" @bind-Value="bookVacationFormModel.EmailAddress"></MatTextField>
-            <ValidationMessage For="() => bookVacationFormModel.EmailAddress" />
-        </div>
+        <MatTextField Class="col-sm-12" Label="E-mail address" @bind-Value="bookVacationFormModel.EmailAddress"></MatTextField>
+        <ValidationMessage For="() => bookVacationFormModel.EmailAddress" />
     </div>
     <div class="form-group form-row">
         <div class="form-col-md-4">
@@ -36,11 +32,12 @@
         <div class="form-col-md-8">
             <MatTextField Label="Phone number" @bind-Value="bookVacationFormModel.PhoneNumber"></MatTextField>
         </div>
+        <div class="form-col-md-12">
+            <ValidationMessage For="() => bookVacationFormModel.PhoneNumberPrefix" />
+            <ValidationMessage For="() => bookVacationFormModel.PhoneNumber" />
+        </div>
     </div>
-    <div class="form-group">
-        <ValidationMessage For="() => bookVacationFormModel.PhoneNumberPrefix" />
-        <ValidationMessage For="() => bookVacationFormModel.PhoneNumber" />
-    </div>
+    
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
         <button @onclick="@Cancel" class="btn btn-secondary">Cancel</button>
