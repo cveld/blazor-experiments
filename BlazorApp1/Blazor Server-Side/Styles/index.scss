@@ -4,11 +4,8 @@
 @import "Components/Rating/Rating.scss";
 @import "Components/Stars/Stars.scss";
 @import "Components/Like/Like.scss";
+@import "hacks.scss";
 
-.mdc-menu-surface {
-    /*Hack for 'bug' in the MatBlazor library for select dropdowns in modals. Without this hack the select dropdown disappears behind the modal */
-    z-index: 200;
-}
 
 map-pin {
     display: none
