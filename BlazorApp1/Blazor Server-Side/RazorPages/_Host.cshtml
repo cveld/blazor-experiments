@@ -1,0 +1,8 @@
+﻿@page "/"
+@using BlazorServerSide
+@using EmbeddedBlazorContent
+
+
+<app>
+    @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
+</app>

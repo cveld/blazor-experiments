@@ -15,7 +15,7 @@ namespace BlazorServerSide.Pages
         public async Task OnGetAsync()
         {
             var result = await httpClient.GetAsync("https://www.nu.nl/");
-            Result = "Requesting external url succeeded";
+            Result = "Requesting external url succeeded";            
         }
     }
 }

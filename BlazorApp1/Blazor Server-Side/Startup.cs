@@ -97,7 +97,9 @@ namespace BlazorServerSide
             //    options.Filters.Add(new AuthorizeFilter(policy));
             //});
 
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorPagesOptions(options => {
+                options.RootDirectory = "/RazorPages";
+            }); ;
             services.AddSingleton<WeatherForecastService>();
             //services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<SignalRClient>();
@@ -149,6 +151,7 @@ namespace BlazorServerSide
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                // endpoints.MapRazorPages();
             });
 
             app.UseEmbeddedBlazorContent(typeof(MatBlazor.BaseMatComponent).Assembly);

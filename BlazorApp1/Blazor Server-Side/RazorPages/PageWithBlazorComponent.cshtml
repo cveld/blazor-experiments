@@ -1,0 +1,10 @@
+﻿@page
+@{
+    ViewData["Title"] = "PageWithBlazorComponent";
+    Layout = "_RazorPagesLayout";
+}
+@using BlazorServerSide.BlazorPages
+
+<h1>PageWithBlazorComponent</h1>
+
+@(await Html.RenderComponentAsync<Counter>(RenderMode.ServerPrerendered))
