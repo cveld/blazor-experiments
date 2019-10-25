@@ -60,6 +60,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazoredMaterialDesignModal\BlazoredMaterialDesignModal.csproj" />
+    <ProjectReference Include="..\BlazorPager\BlazorPager.csproj" />
     <ProjectReference Include="..\PinMapLibrary\PinMapLibrary.csproj" />
   </ItemGroup>
 
