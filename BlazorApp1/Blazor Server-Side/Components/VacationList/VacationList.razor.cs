@@ -34,19 +34,20 @@ namespace BlazorServerSide.Components.VacationList
             {
                 vacations.Add(vacation.ID, vacation);         
 
-                // Register FavoriteClicked event handler
-                Action<CrossCircuitCommunication.MessagePayload> action = (payload) => FavoriteClickedEventHandler((FavoriteClickedEventModel)payload.Message, RemoteTrigger: true);
-                var hashset = crossCircuitCommunication.GetCallbacksHashSet(FAVORITECLICKEDEVENTID, vacation.ID);
-                hashset.Add(action);
-                subscriptions.Add((hashset, action));
+                // Register FavoriteClicked event handler                
+                RegisterCallback(FAVORITECLICKEDEVENTID, vacation.ID, (payload) => FavoriteClickedEventHandler((FavoriteClickedEventModel)payload.Message, RemoteTrigger: true));
 
-                // Register Booked event handler
-                action = (payload) => BookedEventHandler((BookedEventModel)payload.Message, RemoteTrigger: true);
-                hashset = crossCircuitCommunication.GetCallbacksHashSet(BOOKEDEVENTID, vacation.ID);
-                hashset.Add(action);
-                subscriptions.Add((hashset, action));
+                // Register Booked event handler                               
+                RegisterCallback(BOOKEDEVENTID, vacation.ID, (payload) => BookedEventHandler((BookedEventModel)payload.Message, RemoteTrigger: true));
             }
             CurrentUser = "dummy";
+        }
+
+        void RegisterCallback(string eventID, int VacationID, Action<CrossCircuitCommunication.MessagePayload> callback)
+        {            
+            var hashset = crossCircuitCommunication.GetCallbacksHashSet(eventID, VacationID);
+            hashset.Add(callback);
+            subscriptions.Add((hashset, callback));
         }
 
         protected bool VacationLiked(VacationModel vacation)
@@ -143,11 +144,9 @@ namespace BlazorServerSide.Components.VacationList
 
         public void Dispose()
         {
-            foreach (var item in subscriptions)
+            foreach ((var hashSet, var action) in subscriptions)
             {
-                // Item1 = HashSet
-                // Item2 = anonymous Action 
-                item.Item1.Remove(item.Item2);
+                hashSet.Remove(action);
             }
         }
     }
