@@ -13,26 +13,26 @@
 
 @code {
     [Parameter]
-    public int amount { get; set; } = 2;
+    public int Value { get; set; } = 2;
     [Parameter]
-    public EventCallback<int> amountChanged { get; set; }
+    public EventCallback<int> AmountChanged { get; set; }
 
     private int hoverStarIndex = -1;
 
 
     async Task onChange(int value)
     {
-        await this.amountChanged.InvokeAsync(value);
+        await this.AmountChanged.InvokeAsync(value);
     }
 
     int maxAmount()
     {
-        return this.hoverStarIndex != -1 ? this.hoverStarIndex : this.amount;
+        return this.hoverStarIndex != -1 ? this.hoverStarIndex : this.Value;
     }
 
     string getStarClasses(int index)
     {
-        return $"star-${index} ${(index <= this.amount ? "is-active" : "")}";
+        return $"star-${index} ${(index <= this.Value ? "is-active" : "")}";
     }
 
     void onMouseLeave(MouseEventArgs e)
