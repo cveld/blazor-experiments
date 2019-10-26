@@ -1,8 +1,17 @@
 ﻿@page "/"
-@using BlazorServerSide.Components.VacationList
 @using BlazorServerSide.Models
+@using BlazorServerSide.Data
+@inject VacationContext context
 
 <h3 class="@((string)null)" test="@(new Dictionary<string, bool>{ { "test", true } })">Index</h3>
 
-<VacationList />
+<BlazorServerSide.Components.BookForm.BookForm Vacation="vacation" />
 
+@code {
+    VacationModel vacation;
+
+    protected override void OnInitialized()
+    {
+        vacation = context.Vacations.First();
+    }
+}

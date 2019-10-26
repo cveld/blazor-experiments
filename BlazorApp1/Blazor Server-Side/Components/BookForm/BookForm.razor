@@ -7,21 +7,15 @@
     * Vladimir Samoilenko's Material Design Blazor library: https://github.com/SamProf/MatBlazor
 *@
 
-<h3>You would like to book @vacation.Title</h3>
+<h3>You would like to book @Vacation.Title</h3>
 
 
 <EditForm Model="bookVacationFormModel" OnValidSubmit="SubmitForm">
-    @* The following control is a dummy control to prevent default selection of the first control
-        in a Material Design modal dialog *@
-    <MatTextField Style="height: 0" @bind-Value="PreventDefaultControl"></MatTextField>
-    <DataAnnotationsValidator />
     <div class="form-group">
         <MatDatePicker Class="col-md-6 col-sm-12" Label="Booking date" @bind-Value="bookVacationFormModel.BookingDate"></MatDatePicker>
-        <ValidationMessage For="() => bookVacationFormModel.BookingDate" />
     </div>
     <div class="form-group">
         <MatTextField Class="col-sm-12" Label="E-mail address" @bind-Value="bookVacationFormModel.EmailAddress"></MatTextField>
-        <ValidationMessage For="() => bookVacationFormModel.EmailAddress" />
     </div>
     <div class="form-group form-row">
         <div class="form-col-md-4">
@@ -35,10 +29,6 @@
         <div class="form-col-md-8">
             <MatTextField Label="Phone number" @bind-Value="bookVacationFormModel.PhoneNumber"></MatTextField>
         </div>
-        <div class="form-col-md-12">
-            <ValidationMessage For="() => bookVacationFormModel.PhoneNumberPrefix" />
-            <ValidationMessage For="() => bookVacationFormModel.PhoneNumber" />
-        </div>
     </div>
     
     <div class="form-group">
@@ -47,34 +37,19 @@
     </div>
 </EditForm>
 
-@code {
-    string PreventDefaultControl { get; set; }
+@code {    
     BookVacationFormModel bookVacationFormModel = new BookVacationFormModel
     {
         PhoneNumberPrefix = PhoneNumberPrefixModel.PREFIXNETHERLANDS
     };
 
-    [CascadingParameter] ModalParameters Parameters { get; set; }
-    VacationModel vacation;
-
-    protected override void OnInitialized()
-    {
-        // Get VacationModel object from modal parameters:
-        vacation = Parameters.Get<VacationModel>("vacation");
-    }
+    [Parameter] public VacationModel Vacation { get; set; }    
 
     protected void SubmitForm()
-    {
-        var bookedEventModel = new BookedEventModel
-        {
-            VacationID = vacation.ID,
-            BookVacationFormModel = bookVacationFormModel
-        };
-        ModalService.Close(ModalResult.Ok(bookedEventModel));
+    {        
     }
 
     protected void Cancel(MouseEventArgs mouseEventArgs)
-    {
-        ModalService.Cancel();
+    {     
     }
 }
