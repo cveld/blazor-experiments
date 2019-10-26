@@ -12,6 +12,9 @@
 
 <EditForm Model="bookVacationFormModel" OnValidSubmit="SubmitForm">
     <DataAnnotationsValidator />
+    @* The following control is a dummy control to prevent default selection of the first control
+        in a Material Design modal dialog *@
+    <MatTextField Style="height: 0" @bind-Value="PreventDefaultControl"></MatTextField>
     <div class="form-group">
         <MatDatePicker Class="col-md-6 col-sm-12" Label="Booking date" @bind-Value="bookVacationFormModel.BookingDate"></MatDatePicker>
         <ValidationMessage For="() => bookVacationFormModel.BookingDate" />
@@ -37,7 +40,7 @@
             <ValidationMessage For="() => bookVacationFormModel.PhoneNumber" />
         </div>
     </div>
-    
+
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
         <button @onclick="@Cancel" class="btn btn-secondary">Cancel</button>
@@ -45,6 +48,8 @@
 </EditForm>
 
 @code {
+    string PreventDefaultControl { get; set; }
+
     BookVacationFormModel bookVacationFormModel = new BookVacationFormModel
     {
         PhoneNumberPrefix = PhoneNumberPrefixModel.PREFIXNETHERLANDS
