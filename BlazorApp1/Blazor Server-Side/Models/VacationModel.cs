@@ -21,10 +21,6 @@ namespace BlazorServerSide.Models
         public string Location { get; set; }
         public string ImageUrl { get; set; }
         public string PriceUnit { get; set; }
-        public bool Booked { get; set; }
-        public VacationModel()
-        {
-            //Likes = new HashSet<User>();
-        }        
+        public bool Booked { get; set; }               
     }
 }
